@@ -40,7 +40,7 @@ public class MqttHandler {
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
-                    if ("sensor".equals(topic)) {
+                    if ("response".equals(topic)) {
                         try {
                             // Chuyển đổi payload (dữ liệu nhận được) thành chuỗi JSON
                             String receivedMessage = new String(message.getPayload());

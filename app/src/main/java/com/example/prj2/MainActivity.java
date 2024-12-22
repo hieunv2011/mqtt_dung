@@ -2,14 +2,21 @@ package com.example.prj2;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
+
 import org.json.JSONObject;  // Thêm import để sử dụng JSONObject
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String BROKER_URL = "tcp://103.1.238.175:1883";
-    private static final String CLIENT_ID = "android";
+    private static final String CLIENT_ID = "android133";
     private static final String USERNAME = "test";
     private static final String PASSWORD = "testadmin";
     private MqttHandler mqttHandler;
@@ -30,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         mqttHandler.setMqttMessageListener(this::updateReceivedMessage); // Đăng ký callback để nhận thông điệp
 
         // Đăng ký nhận thông điệp từ topic "686868"
-        mqttHandler.subscribe("sensor");
+        mqttHandler.subscribe("response");
 
         // Tìm các nút và gán sự kiện bấm nút
         Button buttonPublish = findViewById(R.id.buttonPublish);
@@ -44,6 +51,21 @@ public class MainActivity extends AppCompatActivity {
 
         Button buttonG3 = findViewById(R.id.buttonG3);
         buttonG3.setOnClickListener(view -> publishMessage("button", "c"));
+
+        Button btnToken =findViewById(R.id.btn_get_token);
+        btnToken.setOnClickListener((view)->
+        {
+            FirebaseMessaging.getInstance().getToken()
+                    .addOnSuccessListener(new OnSuccessListener<String>() {
+                        @Override
+                        public void onSuccess(String token) {
+                            Log.d(Utils.TAG,token);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this,"Fail",Toast.LENGTH_LONG).show();
+                    });
+        });
     }
 
     @Override
@@ -61,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateReceivedMessage(JSONObject jsonObject) {
         try {
             // Giả sử JSON có một trường "data" mà bạn muốn hiển thị
-            String data1 = jsonObject.getString("G1");
-            String data2 = jsonObject.getString("G2");
-            String data3 = jsonObject.getString("G3");
+            String data1 = jsonObject.getString("a");
+            String data2 = jsonObject.getString("b");
+            String data3 = jsonObject.getString("c");
             textViewReceivedMessage1.setText(data1);
             textViewReceivedMessage2.setText(data2);
             textViewReceivedMessage3.setText(data3);
