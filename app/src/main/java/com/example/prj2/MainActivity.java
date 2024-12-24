@@ -34,9 +34,7 @@ public class MainActivity extends AppCompatActivity {
         textViewReceivedMessage3 = findViewById(R.id.textViewReceivedMessage3);
         mqttHandler = new MqttHandler();
         mqttHandler.connect(BROKER_URL, CLIENT_ID, USERNAME, PASSWORD);
-        mqttHandler.setMqttMessageListener(this::updateReceivedMessage); // Đăng ký callback để nhận thông điệp
-
-        // Đăng ký nhận thông điệp từ topic "686868"
+        mqttHandler.setMqttMessageListener(this::updateReceivedMessage);
         mqttHandler.subscribe("response");
 
         // Tìm các nút và gán sự kiện bấm nút
@@ -82,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
     // Hàm này sẽ được gọi khi có thông điệp JSON mới từ topic "686868"
     private void updateReceivedMessage(JSONObject jsonObject) {
         try {
-            // Giả sử JSON có một trường "data" mà bạn muốn hiển thị
             String data1 = jsonObject.getString("a");
             String data2 = jsonObject.getString("b");
             String data3 = jsonObject.getString("c");
